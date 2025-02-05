@@ -9,7 +9,7 @@ grep "$(echo "$@" | ./c/process.sh | ./c/stem.js | tr "\r\n" "  ")" d/global-ind
 
 Here is one idea on how to develop it:
 1. Read the command-line arguments using `process.argv`. A user can provide any string to search for.
-2. Normalize, remove stopwords from and stem the query string — use already developed components
+2. Normalize, remove stopwords from and stem the query string - use already developed components
 3. Search the global index using the processed query string.
 4. Print the matching lines from the global index file.
 
@@ -27,10 +27,24 @@ For example, `execSync(`echo "${input}" | ./c/process.sh`, {encoding: 'utf-8'});
 
 const fs = require('fs');
 const {execSync} = require('child_process');
-const path = require('path');
+// const path = require('path');
 
 
 function query(indexFile, args) {
+  const processOutput = execSync(`echo "${args}" | ./c/process.sh`, {encoding: 'utf-8'});
+  const searchTerms = execSync(`echo "${processOutput}" | ./c/stem.js`, {encoding: 'utf-8'});
+  const globalIndex = fs.readFileSync(indexFile, 'utf-8');
+  const Index = globalIndex.split('\n');
+  const searchTerm = searchTerms.split('\n').join(' ');
+  // console.error(3,searchTerms)
+  for (let i = 0; i < Index.length; i++) {
+    const element = Index[i].split('|');
+
+    // const regex = new RegExp(`\\b${searchTerms}\\b`);
+    if (element[0].trim().includes(searchTerm.trim())) {
+      console.log(Index[i]);
+    }
+  }
 }
 
 const args = process.argv.slice(2); // Get command-line arguments

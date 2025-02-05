@@ -1,9 +1,10 @@
-const distribution = require('../config.js');
+ const distribution = require('../config.js');
 const util = distribution.util;
 
 test('(1 pts) serializeNumber', () => {
   const number = 42;
   const serialized = util.serialize(number);
+  
   const deserialized = util.deserialize(serialized);
   expect(deserialized).toBe(number);
 });
@@ -18,6 +19,7 @@ test('(1 pts) serializeString', () => {
 test('(2 pts) serializeSimpleObject', () => {
   const object = {a: 1, b: 2, c: 3};
   const serialized = util.serialize(object);
+  console.log(1,typeof serialized)
   const deserialized = util.deserialize(serialized);
   expect(deserialized).toEqual(object);
 });
@@ -27,7 +29,7 @@ test('(2 pts) serializeNestedObject', () => {
   const serialized = util.serialize(object);
   const deserialized = util.deserialize(serialized);
   expect(deserialized).toEqual(object);
-});
+}); 
 
 test('(2 pts) serializeArray', () => {
   const array = [1, 2, 3, 4, 5];
@@ -53,13 +55,15 @@ test('(2 pts) serializeNestedArrayAndObject', () => {
 test('(2 pts) serializeError', () => {
   const error = new Error('Hello, World!');
   const serialized = util.serialize(error);
+  
   const deserialized = util.deserialize(serialized);
   expect(deserialized).toEqual(error);
-});
+}); 
 
 test('(2 pts) serializeDate', () => {
   const date = new Date();
   const serialized = util.serialize(date);
+  console.log("date:", serialized); 
   const deserialized = util.deserialize(serialized);
   expect(deserialized.getTime()).toBe(date.getTime());
 });
@@ -84,21 +88,23 @@ test('(3 pts) serializeKindaCircularObject', () => {
   const deserialized = util.deserialize(serialized);
 
   expect(deserialized).toEqual(object);
-});
+}); 
 
 test('(4 pts) serializeFunction', () => {
   const fn = (a, b) => a + b;
   const serialized = util.serialize(fn);
   const deserialized = util.deserialize(serialized);
+  console.log(deserialized)
 
   expect(typeof deserialized).toBe('function');
   expect(deserialized(42, 1)).toBe(43);
-});
+}); 
 
 test('(3 pts) serializeObjectWithFunctions', () => {
   const fn = (a, b) => a + b;
   const object = {func: fn};
   const serialized = util.serialize(object);
+
   const deserialized = util.deserialize(serialized);
   expect(typeof deserialized.func).toBe('function');
   expect(deserialized.func(42, 1)).toBe(43);
@@ -110,12 +116,12 @@ test('(4 pts) serializeObjectWithNameClashFunctions', () => {
   const deserialized = util.deserialize(serialized);
   expect(typeof deserialized.log).toBe('function');
   expect(deserialized.log()).toBe(42);
-});
+}); 
 
 test('(4 pts) serializeRainbowObject', () => {
   const object = {
     n: 1,
-    s: 'Hello, World!',
+    s: 'Hello, World!', 
     a: [1, 2, 3, 4, 5],
     e: new Error('Hello, World!'),
     d: new Date(),
@@ -123,15 +129,17 @@ test('(4 pts) serializeRainbowObject', () => {
     n: null,
     u: undefined,
   };
-
+  
   const serialized = util.serialize(object);
+  console.log("serialized",serialized)
   const deserialized = util.deserialize(serialized);
-
+  console.log(deserialized)
   expect(deserialized).toEqual(object);
 });
 
 test('(4 pts) serialize and deserialize null', () => {
   const original = null;
+  
   const serialized = util.serialize(original);
   expect(original).toEqual(util.deserialize(serialized));
 });
@@ -176,20 +184,23 @@ test('(4 pts) serialize and deserialize empty array', () => {
   const original = [];
   const serialized = util.serialize(original);
   expect(util.deserialize(serialized)).toEqual([]);
-});
+}); 
 
-test('(4 pts) serialize and deserialize complex array', () => {
+ test('(4 pts) serialize and deserialize complex array', () => {
   const original = [27, null, undefined, 'string', true, false, {}, []];
   const serialized = util.serialize(original);
   expect(util.deserialize(serialized)).toEqual([27,
     null, undefined, 'string', true, false, {}, []]);
-});
+}); 
 
 test('(4 pts) serialize and deserialize array with functions', () => {
   const f = function() {};
   const original = [f];
+  
   const serialized = util.serialize(original);
+
   const deserialized = util.deserialize(serialized);
+  
   expect(typeof deserialized[0]).toBe('function');
 });
 
@@ -208,4 +219,4 @@ test('(4 pts) serialize and deserialize object with function', () => {
   const serialized = util.serialize(original);
   const deserialized = util.deserialize(serialized);
   expect(typeof deserialized.f).toBe('function');
-});
+});     
