@@ -35,11 +35,11 @@
     },
     "throughput": {
       "dev": [29],
-      "aws": []
+      "aws": [11]
     },
     "latency": {
       "dev": [0.034],
-      "aws": []
+      "aws": [0.08]
     },
     "dloc": 2000
   }

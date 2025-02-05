@@ -78,4 +78,25 @@ distribution.all.comm.send(['sid'], {node: node, service: 'status', method: 'get
 
 # Results and Reflections
 
+# M1: Serialization / Deserialization
+
+
+## Summary
+
+> Summarize your implementation, including key challenges you encountered. Remember to update the `report` section of the `package.json` file with the total number of hours it took you to complete each task of M1 (`hours`) and the lines of code per task.
+
+
+My implementation comprises 2 software components, totaling `200` lines of code. Key challenges included handling recursion for objects and arrays and JSON data format was consistently incorrect when I call json.parse. Firstly, I encountered a "stack max" issue because I was recursively applying JSON.stringify. After extensive debugging with console.log and researching, I switched to using a for loop combined with recursive calls to serialize(), which ultimately resolved the problem.
+
+
+## Correctness & Performance Characterization
+
+
+> Describe how you characterized the correctness and performance of your implementation
+
+
+*Correctness*: I wrote `5` tests; these tests take `0.5` to execute. This includes objects with Nested Object Serialization, Special Character String Handling, Date Object Serialization, Negative Number Serialization and Various Data Types Handling.
+
+
+*Performance*: The latency of various subsystems is described in the `"latency"` portion of package.json. The characteristics of my development machines are summarized in the `"dev"` portion of package.json.
 > ...
