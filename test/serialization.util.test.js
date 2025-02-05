@@ -1,6 +1,7 @@
- const distribution = require('../config.js');
+const distribution = require('../config.js');
 const util = distribution.util;
-
+const { performance } = require('perf_hooks');
+performance.mark('A');
 test('(1 pts) serializeNumber', () => {
   const number = 42;
   const serialized = util.serialize(number);
@@ -19,7 +20,6 @@ test('(1 pts) serializeString', () => {
 test('(2 pts) serializeSimpleObject', () => {
   const object = {a: 1, b: 2, c: 3};
   const serialized = util.serialize(object);
-  console.log(1,typeof serialized)
   const deserialized = util.deserialize(serialized);
   expect(deserialized).toEqual(object);
 });
@@ -63,7 +63,6 @@ test('(2 pts) serializeError', () => {
 test('(2 pts) serializeDate', () => {
   const date = new Date();
   const serialized = util.serialize(date);
-  console.log("date:", serialized); 
   const deserialized = util.deserialize(serialized);
   expect(deserialized.getTime()).toBe(date.getTime());
 });
@@ -94,8 +93,6 @@ test('(4 pts) serializeFunction', () => {
   const fn = (a, b) => a + b;
   const serialized = util.serialize(fn);
   const deserialized = util.deserialize(serialized);
-  console.log(deserialized)
-
   expect(typeof deserialized).toBe('function');
   expect(deserialized(42, 1)).toBe(43);
 }); 
@@ -131,9 +128,7 @@ test('(4 pts) serializeRainbowObject', () => {
   };
   
   const serialized = util.serialize(object);
-  console.log("serialized",serialized)
   const deserialized = util.deserialize(serialized);
-  console.log(deserialized)
   expect(deserialized).toEqual(object);
 });
 
@@ -220,3 +215,5 @@ test('(4 pts) serialize and deserialize object with function', () => {
   const deserialized = util.deserialize(serialized);
   expect(typeof deserialized.f).toBe('function');
 });     
+performance.mark('B');
+console.log(performance.measure('A to B', 'A', 'B'));

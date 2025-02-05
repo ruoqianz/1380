@@ -26,21 +26,21 @@
     "@brown-ds/distribution": "latest"
   },
   "report": {
-    "hours": 999,
-    "loc": 999,
+    "hours": 30,
+    "loc": 200,
     "dev": {
-      "cpu-no": 999,
-      "mem-gb": 999,
-      "ssd-gb": 999
+      "cpu-no": "i5-13500HX",
+      "mem-gb": 16,
+      "ssd-gb": 256
     },
     "throughput": {
-      "dev": [],
+      "dev": [29],
       "aws": []
     },
     "latency": {
-      "dev": [],
+      "dev": [0.034],
       "aws": []
     },
-    "dloc": -99
+    "dloc": 2000
   }
 }

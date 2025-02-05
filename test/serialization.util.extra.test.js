@@ -3,12 +3,12 @@ const util = distribution.util;
 
 const fs = require('fs');
 
-beforeAll(() => {
+ beforeAll(() => {
   const original = {a: 1, b: 2, c: 3};
   const serialized = util.serialize(original);
   const deserialized = util.deserialize(serialized);
   expect(deserialized).not.toBe(original);
-});
+}); 
 
 test('(5 pts) serializeCircularObject', () => {
   const object = {a: 1, b: 2, c: 3};
@@ -16,7 +16,7 @@ test('(5 pts) serializeCircularObject', () => {
   const serialized = util.serialize(object);
   const deserialized = util.deserialize(serialized);
   expect(deserialized).toEqual(object);
-});
+}); 
 
 test('(5 pts) serializeNativeFunction', () => {
   const fn = fs.readFile;
@@ -60,7 +60,7 @@ test('(5 pts) serializeRainbowObjectCirc', () => {
   const deserialized = util.deserialize(serialized);
 
   expect(deserialized).toEqual(object);
-});
+}); 
 
 test('(5 pts) serialize and deserialize structure with cycle-like reference', () => {
   const x = { a: 1, b: 2, c: 3};

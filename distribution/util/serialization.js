@@ -1,8 +1,27 @@
 const { boolean } = require("yargs");
 const comm = require("../all/comm");
+const fs = require('fs');
+const os = require('os');
+
+const nativeToIdMap = new Map([
+  [console.log, 'console.log'],
+  [fs.readFile, 'fs.readfile'],
+  [require('console').log, 'consoleLogFromRequire'],
+]);
+
+const idToNativeMap = new Map();
+for (const [nativeFun, nativeId] of nativeToIdMap.entries()) {
+  idToNativeMap.set(nativeId, nativeFun);
+}
 
 function serialize(object) {
-  
+
+  if (nativeToIdMap.has(object)) {
+    return JSON.stringify({
+      type: "native",
+      value: nativeToIdMap.get(object)
+    });
+  }
   if (typeof object === "string") {
 
     return `{"type":"string","value":${JSON.stringify(object)}}`; 
@@ -77,6 +96,10 @@ function deserialize(string) {
     string = JSON.parse(string);
   }
 
+  if (string.type === "native") {
+    const nativeVal = idToNativeMap.get(string.value);
+    return nativeVal;
+  }
   
   if(string.type == "undefined"){
     return undefined
@@ -123,10 +146,7 @@ function deserialize(string) {
 
   if(string.type == "object"){
     const result = {};
-    console.log(11,string.value)
-    for(i in string.value ){
-
-      
+    for(i in string.value ){  
       result[i] = deserialize(string.value[i])
     }
   
