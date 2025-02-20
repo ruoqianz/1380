@@ -1,4 +1,3 @@
-const id = require('../util/id');
 const log = require('../util/log');
 const serialization = require("../util/serialization");
 const status = {};
@@ -6,8 +5,8 @@ const status = {};
 status.stop = require('@brown-ds/distribution/distribution/local/status').stop; 
 
 global.moreStatus = {
-  sid: id.getSID(global.nodeConfig),
-  nid: id.getNID(global.nodeConfig),
+  sid: global.distribution.util.id.getSID(global.nodeConfig),
+  nid: global.distribution.util.id.getNID(global.nodeConfig),
   counts: 0,
 };
 
