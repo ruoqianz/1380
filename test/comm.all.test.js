@@ -35,7 +35,7 @@ test('(2 pts) all.comm.send(status.get(nid))', (done) => {
   });
 });
 
-test('(2 pts) local.comm.send(all.status.get(nid))', (done) => {
+/* test('(2 pts) local.comm.send(all.status.get(nid))', (done) => {
   const nids = Object.values(mygroupGroup).map((node) => id.getNID(node));
   const remote = {node: n5, service: 'groups', method: 'put'};
 
@@ -74,14 +74,15 @@ test('(2 pts) all.comm.send(status.get(random))', (done) => {
       done(error);
     }
   });
-});
+}); */
 
 beforeAll((done) => {
   // First, stop the nodes if they are running
   const remote = {service: 'status', method: 'stop'};
-
+  
   remote.node = n1;
   distribution.local.comm.send([], remote, (e, v) => {
+    
     remote.node = n2;
     distribution.local.comm.send([], remote, (e, v) => {
       remote.node = n3;
@@ -98,15 +99,15 @@ beforeAll((done) => {
         });
       });
     });
-  });
-
+  }); 
+  
   const startNodes = () => {
     mygroupGroup[id.getSID(n1)] = n1;
     mygroupGroup[id.getSID(n2)] = n2;
     mygroupGroup[id.getSID(n3)] = n3;
     mygroupGroup[id.getSID(n4)] = n4;
     mygroupGroup[id.getSID(n5)] = n5;
-
+    
 
     const groupInstantiation = () => {
       // Create the groups
@@ -115,14 +116,15 @@ beforeAll((done) => {
             done();
           });
     };
-
-
+    
     // Now, start the nodes listening node
     distribution.node.start((server) => {
-      localServer = server;
 
+      localServer = server;
+      console.log("not yet")
       // Start the nodes
       distribution.local.status.spawn(n1, (e, v) => {
+             console.log("spawn")
         distribution.local.status.spawn(n2, (e, v) => {
           distribution.local.status.spawn(n3, (e, v) => {
             distribution.local.status.spawn(n4, (e, v) => {

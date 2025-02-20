@@ -100,3 +100,33 @@ My implementation comprises 2 software components, totaling `200` lines of code.
 
 *Performance*: The latency of various subsystems is described in the `"latency"` portion of package.json. The characteristics of my development machines are summarized in the `"dev"` portion of package.json.
 > ...
+# M2: Actors and Remote Procedure Calls (RPC)
+
+
+## Summary
+
+> Summarize your implementation, including key challenges you encountered. Remember to update the `report` section of the `package.json` file with the total number of hours it took you to complete each task of M2 (`hours`) and the lines of code per task.
+
+
+My implementation comprises `3` software components, totaling `150` lines of code. Key challenges included how to communicate with other node, I need to understand how the communicate works. I figure out the flow about the communication and then implement comm and node function easily.Also I met some challenges when work on rpc scenarios.I managed to solve the problem by following the hints in the handout "Think carefully about which parts of an RPC computation execute locally and which ones execute remotely.".
+
+
+## Correctness & Performance Characterization
+
+> Describe how you characterized the correctness and performance of your implementation
+
+
+*Correctness*: I wrote `5` tests; these tests take `0.4s` to execute.
+
+
+*Performance*: I characterized the performance of comm and RPC by sending 1000 service requests in a tight loop. Average throughput and latency is recorded in `package.json`.
+
+
+## Key Feature
+
+> How would you explain the implementation of `createRPC` to someone who has no background in computer science ¡ª i.e., with the minimum jargon possible?
+Imagine you have a bakery, but your friend in another city has an amazing recipe for chocolate cake. You want to make the cake, but you don¡¯t have the recipe. Instead of traveling to your friend's city, you call or text your friend and say:
+
+"Hey, can you bake the cake for me and send me the result?"
+
+Your friend follows the recipe, bakes the cake, and then sends it back to you. Now you have the cake, even though the work was done in another city.

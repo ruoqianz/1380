@@ -114,16 +114,16 @@ test('(2 pts) local.groups.put(dummy)/add(n1)/get(dummy)', (done) => {
     '507aa': {ip: '127.0.0.1', port: 8080},
     '12ab0': {ip: '127.0.0.1', port: 8081},
   };
-
   distribution.local.groups.put('dummy', g, (e, v) => {
     const n1 = {ip: '127.0.0.1', port: 8082};
-
+    
     distribution.local.groups.add('dummy', n1, (e, v) => {
       const expectedGroup = {
         ...g, ...{[id.getSID(n1)]: n1},
       };
-
+      console.log(expectedGroup)
       distribution.local.groups.get('dummy', (e, v) => {
+        
         try {
           expect(e).toBeFalsy();
           expect(v).toEqual(expectedGroup);

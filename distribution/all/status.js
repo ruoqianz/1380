@@ -5,12 +5,18 @@ const status = function(config) {
 
   return {
     get: (configuration, callback) => {
+      
     },
 
     spawn: (configuration, callback) => {
+      callback = callback || function() { };
+      console.log(1)
+      callback(configuration);
     },
 
     stop: (callback) => {
+      callback = callback || function() { };
+      callback(configuration);
     },
   };
 };

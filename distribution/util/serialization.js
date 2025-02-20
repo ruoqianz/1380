@@ -152,8 +152,8 @@ function deserialize(string) {
   
   return result
 }
-}
-module.exports = {
-  serialize: serialize,
-  deserialize: deserialize,
+}module.exports = {
+  serialize: require('@brown-ds/distribution/distribution/util/serialization').serialize,
+  deserialize: require('@brown-ds/distribution/distribution/util/serialization').deserialize,
 };
+

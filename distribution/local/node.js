@@ -1,7 +1,7 @@
 const http = require('http');
 const url = require('url');
 const log = require('../util/log');
-
+const serialization = require("../util/serialization");
 
 /*
     The start function will be called to start your node.
@@ -13,9 +13,12 @@ const log = require('../util/log');
 const start = function(callback) {
   const server = http.createServer((req, res) => {
     /* Your server will be listening for PUT requests. */
+    
 
     // Write some code...
-
+    if (req.method != "PUT"){
+      res.end(JSON.stringify({ error: 'Wrong request method, which should be PUT' }))
+    }
 
     /*
       The path of the http request will determine the service to be used.
@@ -24,7 +27,11 @@ const start = function(callback) {
 
 
     // Write some code...
-
+    const parsedUrl = url.parse(req.url)
+    const pathParts = parsedUrl.pathname.split("/");
+    const gid = pathParts[1];  
+    const serviceName =  pathParts[2];
+    const methodName = pathParts[3];
 
     /*
 
@@ -46,8 +53,10 @@ const start = function(callback) {
     let body = [];
 
     req.on('data', (chunk) => {
+        body.push(chunk);
+      
     });
-
+    
     req.on('end', () => {
 
       /* Here, you can handle the service requests.
@@ -58,12 +67,23 @@ const start = function(callback) {
 
       // Write some code...
 
+    body = Buffer.concat(body).toString();  
+    const requestData = serialization.deserialize(body);  
+    global.distribution.local.routes.get({service: serviceName, gid: gid},(e,v) =>{if (e){
+      
+      return res.end(serialization.serialize({ error: e.message }));
+    }
+    const args = Array.isArray(requestData) ? requestData : [];
 
+    v[methodName](...args, (e, v) => {
+      return res.end(serialization.serialize({ error: e, data: v }));
 
-    });
+    });})
   });
 
 
+
+});
   /*
     Your server will be listening on the port and ip specified in the config
     You'll be calling the `callback` callback when your server has successfully
