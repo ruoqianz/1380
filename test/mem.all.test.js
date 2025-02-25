@@ -138,6 +138,7 @@ test(
       distribution.group1.mem.put(user, key, (e, v) => {
         const nid = id.consistentHash(kid, nids);
         const pickedNode = nodes.filter((node) => id.getNID(node) === nid)[0];
+
         const remote = {node: pickedNode, service: 'mem', method: 'get'};
         const message = [{gid: 'group1', key: key}];
 
@@ -311,6 +312,7 @@ test('(3 pts) all.mem.put(no key)', (done) => {
   const user = {first: 'Gus', last: 'Fring'};
 
   distribution.mygroup.mem.put(user, null, (e, v) => {
+    console.log("put 2", v)
     distribution.mygroup.mem.get(id.getID(user), (e, v) => {
       expect(e).toBeFalsy();
       try {

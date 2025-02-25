@@ -10,6 +10,7 @@ function routes(config) {
    * @param {Callback} callback
    */
   function put(service, name, callback = () => { }) {
+    distribution[context.gid].comm.send([service, name], {  gid: context.gid, service: "routes", method: "put" }, callback);
   }
 
   /**
@@ -18,6 +19,7 @@ function routes(config) {
    * @param {Callback} callback
    */
   function rem(service, name, callback = () => { }) {
+    distribution[context.gid].comm.send([service, name], { gid: context.gid, service: "routes", method: "rem" }, callback);
   }
 
   return {put, rem};

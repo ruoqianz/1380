@@ -130,3 +130,32 @@ Imagine you have a bakery, but your friend in another city has an amazing recipe
 "Hey, can you bake the cake for me and send me the result?"
 
 Your friend follows the recipe, bakes the cake, and then sends it back to you. Now you have the cake, even though the work was done in another city.
+
+# M3: Node Groups & Gossip Protocols
+
+
+## Summary
+
+> Summarize your implementation, including key challenges you encountered. Remember to update the `report` section of the `package.json` file with the total number of hours it took you to complete each task of M3 (`hours`) and the lines of code per task.
+
+
+My implementation comprises `10' new software components, totaling `200` added lines of code over the previous implementation. It was extremely difficult to solve the issue where spawn couldn't be generated¡ªit was a very strange problem. After extensive debugging, I finally discovered that the issue stemmed from the RPC call inside routes.
+
+Additionally, debugging is consuming a huge amount of time since the call involves multiple components. Identifying the root cause requires debugging each component individually, which is very time-consuming. Right now, I need to determine whether the problem occurs during communication or after the node call. Following Nico's suggestion, I am now learning to debug using logs..
+
+
+## Correctness & Performance Characterization
+
+> Describe how you characterized the correctness and performance of your implementation
+
+
+*Correctness* -- number of tests and time they take.
+8 3.181s
+
+*Performance* -- spawn times (all students) and gossip (lab/ec-only).
+
+
+## Key Feature
+
+> What is the point of having a gossip protocol? Why doesn't a node just send the message to _all_ other nodes in its group?
+If sending the message to _all_ other nodes in its group would take a huge amount of time and resources, whereas using the gossip protocol would reduce the cost considerably, and eventually everyone would be able to learn about it at a cost of O(log(n))

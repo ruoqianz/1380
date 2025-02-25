@@ -1,46 +1,43 @@
 /** @typedef {import("../types").Callback} Callback */
-module.exports = {get, put, rem};
-const status = require('./status');
-const comm = require('./comm');
-const routes = require('./routes');
-let services = {status,comm,routes}
-const log = require('../util/log');
-const serialization = require("../util/serialization");
+
+const log = require("../util/log");
+
+const table = {};
+
 /**
  * @param {string} configuration
  * @param {Callback} callback
  * @return {void}
  */
 function get(configuration, callback) {
-    log(`start routes get `);
-    callback = callback || function(){};
-    let service = ""
-    let result = ""
-    if (configuration instanceof Object) {
-        service = configuration.service;
-        gid = configuration.gid || 'local';
-      } else {
-        service = configuration;
-        gid = "local";
-      }
-      if (gid === "local" && service in services) {
-        result = services[service];
-        callback(null, result);
-      }else if (gid && gid in global.distribution && service in global.distribution[gid]){
-        result = global.distribution[gid][service];
-        callback(null, result);
-      }else if(!(service in global.distribution[gid])) {
-        
-        const rpc = global.toLocal[service];
-      
-        if (rpc) {
-             callback(null, { call: rpc });
-         } else {
-             callback(new Error(`Service not found!`),null);
-          }
-    } 
+  let error = undefined,
+    config = undefined,
+    gid = undefined,
+    service = undefined;
+  if (configuration instanceof Object) {
+    service = configuration.service;
+    gid = configuration.gid || 'local';
+  } else {
+    service = configuration;
+    gid = "local";
+  }
+  callback = callback || function(e,v){if(e){callback(e,null)}};
+  if (gid === "local" && service in table) {
+    config = table[service];
+    callback(error, config);
+  } else if (gid && gid in global.distribution && service in global.distribution[gid]) {
+    config = global.distribution[gid][service];
+    callback(error, config);
+  } else if (global.toLocal[service]) {
+    const rpc = global.toLocal[service];
+    config = { call: rpc };
+    callback(error, config);
+  } else {
+    error = new Error(`'${service}' doesn't exist!`);
+  }
+  
+  return config;
 }
-
 
 /**
  * @param {object} service
@@ -49,24 +46,10 @@ function get(configuration, callback) {
  * @return {void}
  */
 function put(service, configuration, callback) {
-    
-    callback = callback || function(){};
-    if (configuration instanceof Object) {
-        config = configuration.service;
-        gid = configuration.gid || 'local';
-      } else {
-        config = configuration;
-        gid = "local";
-      }
-       if (gid === "local"){
-        services[config] = service;
-        
-       }else{
-        global.distribution[gid][config] = service
-       }
-       log(`put method successfully called`,serialization.serialize(service));
-       callback(undefined, service);
+  callback = callback || function(e,v){if(e){ callback(e, null);}}
 
+  table[configuration] = service;
+  callback(undefined, service);
 }
 
 /**
@@ -74,15 +57,14 @@ function put(service, configuration, callback) {
  * @param {Callback} callback
  */
 function rem(configuration, callback) {
-    callback = callback || function(e,v) {};
-    if (services.hasOwnProperty(configuration)) {
-        delete services[configuration];
 
-    } else {
-        callback(new Error("Invalid or missing parameters"),null)
-
-    }
-
+  callback = callback || function(e,v){if(e){ callback(e, null);}}
+  if (configuration in table) {
+    delete route_table[configuration];
+  } else {
+    error = new Error(`${configuration} doesn't exist!`);
+  }
+  callback(error, configuration);
 }
 
 module.exports = { get, put, rem };

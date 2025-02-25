@@ -45,7 +45,6 @@ test('(1 pts) all.store.del(jcarb)', (done) => {
 test('(1 pts) all.store.put(jcarb)', (done) => {
   const user = {first: 'Josiah', last: 'Carberry'};
   const key = 'jcarbmp';
-
   distribution.mygroup.store.put(user, key, (e, v) => {
     try {
       expect(e).toBeFalsy();
@@ -137,10 +136,12 @@ test('(2 pts) all.store.put(jcarb)/local.comm.send(store.get(jcarb))',
       distribution.mygroup.store.put(user, key, (e, v) => {
         const nid = id.naiveHash(kid, nids);
         const pickedNode = nodes.filter((node) => id.getNID(node) === nid)[0];
+        console.log("pickedNode",nid)
         const remote = {node: pickedNode, service: 'store', method: 'get'};
         const message = [{gid: 'mygroup', key: key}];
 
         distribution.local.comm.send(message, remote, (e, v) => {
+          
           try {
             expect(e).toBeFalsy();
             expect(v).toEqual(user);
@@ -422,7 +423,7 @@ beforeAll((done) => {
                             done();
                             return;
                           }
-
+                          
                           distribution.mygroup.store.del(k[idx], (e, v) => {
                             step(++idx);
                           });

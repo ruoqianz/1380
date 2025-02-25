@@ -1,5 +1,4 @@
 /** @typedef {import("../types").Callback} Callback */
-
 /**
  * NOTE: This Target is slightly different from local.all.Target
  * @typdef {Object} Target
@@ -23,47 +22,42 @@ function comm(config) {
    * @param {Callback} callback
    */
   function send(message, configuration, callback) {
-    distribution.local.groups.get(context.gid, (e, group) => {
-      if (e) {
-        return callback(e, null);
-      }
+    
+    const group = distribution.local.groups.get(context.gid, (e, v) => e ? console.log(e):null)
+    const nodes = Object.values(group); 
+    const responses = {}; 
+    let pending = nodes.length; 
+    let hasError = {}
+    if (nodes.length === 0) {
+      return callback(null, responses);
+    }
 
-      const nodes = Object.values(group); 
-      const responses = {}; 
-      let pending = nodes.length; 
-      let hasError = false;
+    nodes.forEach(node => {
+      const remoteConfig = {
+        node: node,
+        service: configuration.service,
+        method: configuration.method,
+      };
+      
+      distribution.local.comm.send(message, remoteConfig, (e, v) => {
+        
+        if (e) {
+          hasError[distribution.util.id.getSID(node)] = e;
+        } else {
+          
+          responses[distribution.util.id.getSID(node)] = v;
+          
+        }
 
-      if (nodes.length === 0) {
-        return callback(null, responses);
-      }
-
-      nodes.forEach(node => {
-        const remoteConfig = {
-          node: node,
-          service: configuration.service,
-          method: configuration.method,
-        };
-
-        distribution.local.comm.send(message, remoteConfig, (err, res) => {
-          if (err) {
-            console.log(err)
-            hasError = true;
-            responses[distribution.util.id.getNID(node)] = err.message;
-          } else {
-            responses[distribution.util.id.getNID(node)] = res;
-          }
-
-          pending--;
-          if (pending === 0) {
-            callback(hasError ? { error: "One or more requests failed" } : null, responses);
-          }
-        });
+        pending--;
+        if (pending === 0) {
+          
+          callback(hasError, responses);
+        }
       });
     });
   }
-    
-
-
+   
   return {send};
 };
 

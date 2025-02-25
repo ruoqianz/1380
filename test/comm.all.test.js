@@ -19,7 +19,7 @@ const n4 = {ip: '127.0.0.1', port: 9004};
 const n5 = {ip: '127.0.0.1', port: 9005};
 const n6 = {ip: '127.0.0.1', port: 9006};
 
-test('(2 pts) all.comm.send(status.get(nid))', (done) => {
+ test('(2 pts) all.comm.send(status.get(nid))', (done) => {
   const nids = Object.values(mygroupGroup).map((node) => id.getNID(node));
   const remote = {service: 'status', method: 'get'};
 
@@ -33,9 +33,9 @@ test('(2 pts) all.comm.send(status.get(nid))', (done) => {
       done(error);
     }
   });
-});
+}); 
 
-/* test('(2 pts) local.comm.send(all.status.get(nid))', (done) => {
+test('(2 pts) local.comm.send(all.status.get(nid))', (done) => {
   const nids = Object.values(mygroupGroup).map((node) => id.getNID(node));
   const remote = {node: n5, service: 'groups', method: 'put'};
 
@@ -45,6 +45,7 @@ test('(2 pts) all.comm.send(status.get(nid))', (done) => {
 
     // from local node, run mygroup.status.get() on n5 via send()
     distribution.local.comm.send(['nid'], remote, (e, v) => {
+
       expect(e).toEqual({});
 
       try {
@@ -74,7 +75,7 @@ test('(2 pts) all.comm.send(status.get(random))', (done) => {
       done(error);
     }
   });
-}); */
+});
 
 beforeAll((done) => {
   // First, stop the nodes if they are running
@@ -121,10 +122,8 @@ beforeAll((done) => {
     distribution.node.start((server) => {
 
       localServer = server;
-      console.log("not yet")
       // Start the nodes
       distribution.local.status.spawn(n1, (e, v) => {
-             console.log("spawn")
         distribution.local.status.spawn(n2, (e, v) => {
           distribution.local.status.spawn(n3, (e, v) => {
             distribution.local.status.spawn(n4, (e, v) => {

@@ -1,21 +1,22 @@
-const distribution = require('@brown-ds/distribution');
+
 const groups = {};
 const { id } = require("@brown-ds/distribution/distribution/util/util");
 
 groups.get = function(name, callback) {
 
     if (!groups[name]) {
-        // Group not found
+
         return callback(new Error('Group not found'), null);
       }
-      // Return the group
-      return callback(null, groups[name]);
+      callback(null, groups[name])
+      return groups[name];
 };
 
 groups.put = function(config, group, callback) {
   let gid= ""
   if (config instanceof Object) {
       gid = config.gid;
+      hash = config.hash;
   }else{
     gid = config
   }
@@ -25,11 +26,13 @@ groups.put = function(config, group, callback) {
       gossip: require('../all/gossip')({gid: gid}),
       groups: require('../all/groups')({gid: gid}),
       routes: require('../all/routes')({gid: gid}),
-      mem: require('../all/mem')({gid: gid}),
-      store: require('../all/store')({gid: gid}),
+      mem: require('../all/mem')({gid: gid,hash: hash}),
+      store: require('../all/store')({gid: gid,hash: hash}),
   };
+
   groups[gid] = group;
-  callback(undefined, group);
+  groups["all"] = group
+  callback(null, group);
 };
 
 groups.del = function(name, callback) {
@@ -43,14 +46,6 @@ groups.del = function(name, callback) {
 };
 
 groups.add = function(name, node, callback) {
-
-    if (!groups[name]) {
-        if (callback) {
-          return callback(new Error('Group not found'), null);
-        }
-      }
-
-
     groups[name][id.getSID(node)] = node;
         if (callback) {
             return callback(null, groups[name]);

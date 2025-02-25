@@ -1,5 +1,5 @@
 const log = require('../util/log');
-const serialization = require("../util/serialization");
+
 const status = {};
 //status.spawn = require('@brown-ds/distribution/distribution/local/status').spawn; 
 status.stop = require('@brown-ds/distribution/distribution/local/status').stop; 
@@ -40,10 +40,9 @@ status.get = function(configuration, callback) {
 };
 
 
-status.spawn = function(configuration, callback) {
-  log("Spawn", serialization.serialize(configuration))
-  require('@brown-ds/distribution/distribution/local/status').spawn
-};
+
+status.spawn =  require('@brown-ds/distribution/distribution/local/status').spawn
+
 
 
 

@@ -55,10 +55,37 @@ function naiveHash(kid, nids) {
 }
 
 function consistentHash(kid, nids) {
+
+  const sortedNids = [...nids].sort();
+
+
+  for (const nid of sortedNids) {
+    if (nid >= kid) {
+      return nid;
+    }
+  }
+
+  return sortedNids[0];
 }
 
 
+function computeWeight(kid, nid) {
+
+  const combined = kid + nid;
+  return crypto.createHash('sha256').update(combined).digest();
+}
+
+
+
 function rendezvousHash(kid, nids) {
+
+
+  return nids.reduce((selected, nid) => {
+    const weightSelected = computeWeight(kid, selected);
+    const weightNid = computeWeight(kid, nid);
+
+    return weightNid.compare(weightSelected) > 0 ? nid : selected;
+  }, nids[0]);
 }
 
 module.exports = {
@@ -69,4 +96,5 @@ module.exports = {
   naiveHash,
   consistentHash,
   rendezvousHash,
+  idToNum,
 };

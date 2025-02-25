@@ -17,6 +17,7 @@ const start = function(callback) {
 
     // Write some code...
     if (req.method != "PUT"){
+      
       res.end(JSON.stringify({ error: 'Wrong request method, which should be PUT' }))
     }
 
@@ -69,13 +70,15 @@ const start = function(callback) {
 
     body = Buffer.concat(body).toString();  
     const requestData = serialization.deserialize(body);  
-    global.distribution.local.routes.get({service: serviceName, gid: gid},(e,v) =>{if (e){
+    
+    global.distribution.local.routes.get({service: serviceName, gid: gid},(e,method) =>{if (e){
       
       return res.end(serialization.serialize({ error: e.message }));
     }
     const args = Array.isArray(requestData) ? requestData : [];
-
-    v[methodName](...args, (e, v) => {
+    
+    method[methodName](...args, (e, v) => {
+      
       return res.end(serialization.serialize({ error: e, data: v }));
 
     });})
